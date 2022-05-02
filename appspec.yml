@@ -1,6 +1,6 @@
 # appspec.yml
 
-version: 20.04
+version: 0.0
 os: ubuntu
 files:
   - source: /
