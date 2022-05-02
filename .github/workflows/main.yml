@@ -3,7 +3,10 @@
 name: logging-system
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
   
 env:
   S3_BUCKET_NAME: logging-system-jsj
