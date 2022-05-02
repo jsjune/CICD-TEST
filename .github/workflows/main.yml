@@ -44,7 +44,6 @@ jobs:
       - name: Upload to S3 
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
 
-출처: https://wbluke.tistory.com/39 [함께 자라기]
 
 
 
