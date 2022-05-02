@@ -1,59 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline Service</title>
+    <title>항해88 대나무숲</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!--    font-family: 'Jua', sans-serif;-->
     <script>
+        $(document).ready(function () {
+            getMessages();
+        })
 
-        function isValidContents(contents) {
-            if (contents == '') {
-                alert('내용을 입력해주세요');
-                return false;
-            }
-            return true;
-        }
-
-        function writePost() {
-            let contents = $('#contents').val();
-            let name = $('#name').val();
-            let title = $('#title').val();
-            if (isValidContents(contents) == false) {
-                return;
-            }
-            if (isValidContents(name) == false) {
-                return;
-            }
-            if (isValidContents(title) == false) {
-                return;
-            }
-
-            let data = {'title': title, 'name': name, 'contents': contents};
+        // 게시글을 불러옵니다.
+        function getMessages() {
+            $('#cards-box').empty();
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/api/contents",
-                contentType: "application/json",
-                data: JSON.stringify(data),
+                data: {},
                 success: function (response) {
-                    alert('메시지가 성공적으로 작성되었습니다.');
-                    location.href = 'index.html';
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status);
-                    alert(thrownError);
+                    for (let i = 0; i < response.length; i++) {
+                        let post = response[i];
+                        let id = post.id;
+                        let name = post.name;
+                        let title = post.title;
+                        let contents = post.contents;
+                        let modifiedAt = post.modifiedAt;
+                        addHTML(id, name, title, contents, modifiedAt);
+                    }
                 }
             });
         }
 
+        function addHTML(id, name, title, contents, modifiedAt) {
+            let tempHtml = makeMessage(id, name, title, contents, modifiedAt);
+            $('#cards-box').append(tempHtml);
+        }
+
+        function makeMessage(id, name, title, contents, modifiedAt) {
+            return `<a href="detail.html?id=${id}">
+                        <div class="card">
+                            <div class="metadata">
+                               <div id="${id}-name" class="name">
+                                   ${name}
+                               </div>
+                               <div class="date">
+                                   ${modifiedAt}
+                               </div>
+                            </div>
+                        <h2 class='title' id="${id}-title">"${title}"</h2>
+                            <div class="contents" id="${id}-contents" >
+                               ${contents}
+                            </div>
+                            </a>
+                        </div>`;
+        }
 
     </script>
 
     <style>
+        @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
+
         * {
             font-family: 'Jua', sans-serif !important;
         }
@@ -62,32 +73,25 @@
             margin: 0px;
         }
 
-        .area-write {
-            position: relative;
-            top: 150px
-        }
-
         .wrap {
             width: 538px;
             margin: 10px auto;
+            height: 300px;
         }
 
-        #contents {
-            width: 538px;
+        .to-write{
+            margin-bottom: 0;
         }
 
-        .area-write {
+        .to-write button {
+            padding: 10px;
+            width: 150px;
+            font-size: 20px;
             position: relative;
-            width: 538px;
-        }
-
-        .area-write img {
-            cursor: pointer;
-            position: absolute;
-            width: 22.2px;
-            height: 18.7px;
-            bottom: 15px;
-            right: 17px;
+            margin-left: 450px;
+            margin-top: 100px;
+            margin-bottom: 50px;
+            border-radius: 20px;
         }
 
         .background-header {
@@ -107,7 +111,6 @@
             width: 100%;
             background-color: #174978;
         }
-
 
         .header {
             margin-top: 170px;
@@ -141,57 +144,109 @@
             color: #ffffff;
         }
 
-        textarea.field {
-            width: 502px !important;
-            height: 146px;
+        .card {
+            width: 538px;
             border-radius: 5px;
             background-color: #ffffff;
-            border: none;
-            padding: 18px;
-            resize: none;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
         }
 
-        textarea.field::placeholder {
-            width: 216px;
-            height: 16px;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 16px;
+        .card .metadata {
+            position: relative;
+            display: flex;
+            font-family: 'Spoqa Han Sans';
+            font-size: 18px;
             font-weight: normal;
             font-stretch: normal;
             font-style: normal;
             line-height: 1;
-            letter-spacing: -0.96px;
+            letter-spacing: -0.77px;
             text-align: left;
-            color: #868e96;
+            color: #adb5bd;
+            height: 14px;
+            padding: 10px 23px;
         }
 
-        .form-control {
-            height: 30px;
-            margin-bottom: 10px;
-            margin-left: 70px;
+        .card .metadata .date {
+
+        }
+
+        .card .metadata .name {
+            margin-right: 50px;
+
+        }
+
+        .contents {
+            padding: 0px 23px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .contents div.edit {
+            display: none;
+        }
+
+        .contents textarea.te-edit {
+            border-right: none;
+            border-top: none;
+            border-left: none;
+            resize: none;
+            border-bottom: 1px solid #212529;
+            width: 100%;
+            font-family: 'Spoqa Han Sans';
+        }
+
+        #cards-box {
+            margin-top: 12px;
+        }
+
+        .card h2 {
+            margin-left: 30px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000000;
         }
     </style>
 </head>
+
 <body>
 <div class="background-header">
-
 </div>
 <div class="background-body">
 
 </div>
 <div class="wrap">
     <div class="header">
-        <h2>항해99 바다 위 대나무숲<br><br>
+        <h2>항해5464313546바다 위 대나무숲<br><br>
             맘껏 외치세요 무야호!</h2>
     </div>
-    <div class="area-write">
-        <div class="form-floating mb-3">
-            <input type="title" class="form-control" id="title" placeholder="제 목">
-            <input type="name" class="form-control" id="name" placeholder="닉네임">
+    <div class="to-write">
+        <button type="button" class="btn btn-primary" onclick="location.href='write.html'"><b>글 쓰 기</b></button>
+    </div>
+    <div id="cards-box" class="area-read">
+        <div class="card">
+            <div class="metadata">
+                <div class="date">
+                    October 10, 2020
+                </div>
+                <div class="name">
+                    anonymous
+                </div>
+            </div>
+            <h2>asd</h2>
+            <div class="contents">
+                <div id="1-contents" class="text">
+                    dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
+                </div>
+                <div id="1-editarea" class="edit">
+                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+                </div>
+            </div>
+
         </div>
-        <textarea class="field" placeholder="공유하고 싶은 소식을 입력해주세요" name="contents" id="contents" cols="30"
-                  rows="10"></textarea>
-        <img src="images/send.png" alt="" onclick="writePost()">
     </div>
 </div>
 </body>
