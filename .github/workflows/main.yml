@@ -1,6 +1,6 @@
-# CI.yml
+# logging-system.yml
 
-name: CI
+name: logging-system
 
 on:
   workflow_dispatch:
