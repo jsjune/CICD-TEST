@@ -19,7 +19,7 @@ public class ContentsRestController {
 
     @GetMapping("/health")
     public String checkHealth() {
-        return "healthyal;skdjfl;askjdf;laksj;ldfkja;ls";
+        return "hea";
     }
 
     // 게시글 전체 조회
