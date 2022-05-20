@@ -3,11 +3,11 @@
 name: logging-system
 
 on:
-  workflow_dispatch:
-#  push:
-#    branches: [ master ]
-#  pull_request:
-#    branches: [ master ]
+#  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
   
 env:
   S3_BUCKET_NAME: jsj-bucket
@@ -35,7 +35,7 @@ jobs:
         shell: bash
         
       - name: Make zip file 
-        run: zip -r ./$cicd-cicd.zip .
+        run: zip -r ./$GITHUB-cicd.zip .
         shell: bash 
         
       - name: Configure AWS credentials 
@@ -46,10 +46,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }} 
           
       - name: Upload to S3 
-        run: aws s3 cp --region ap-northeast-2 ./$cicd-cicd.zip s3://$S3_BUCKET_NAME/$cicd-cicd.zip
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB-cicd.zip s3://$S3_BUCKET_NAME/$GITHUB-cicd.zip
         
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name cicd-test-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name develop --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$cicd_cicd.zip
+        run: aws deploy create-deployment --application-name cicd-test-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name develop --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_cicd.zip
 
 
 
