@@ -2,7 +2,7 @@
 
 #!/bin/bash
 
-CURRENT_PORT=$(cat /home/ubuntu/ec2-user/service_url.inc | grep -Po '[0-9]+' | tail -1)
+CURRENT_PORT=$(cat /home/ubuntu/service_url.inc | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
 
 echo "> Current port of running WAS is ${CURRENT_PORT}."
@@ -22,7 +22,7 @@ if [ ! -z ${TARGET_PID} ]; then
   sudo kill ${TARGET_PID}
 fi
 
-nohup java -jar -Dserver.port=${TARGET_PORT} /home/ubuntu/ec2-user/com-eungsoo-blog/build/libs/* > /home/ubuntu/ec2-user/nohup.out 2>&1 &
+nohup java -jar -Dserver.port=${TARGET_PORT} /home/ubuntu/com-eungsoo-blog/build/libs/blog-0.0.1-SNAPSHOT.jar > /home/ubuntu/nohup.out 2>&1 &
 echo "> Now new WAS runs at ${TARGET_PORT}."
 exit 0
 

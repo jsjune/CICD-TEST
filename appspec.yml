@@ -4,7 +4,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/ec2-user/com-eungsoo-blog
+    destination: /home/ubuntu/blog
     overwrite: yes
 
 permissions:
