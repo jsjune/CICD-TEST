@@ -17,6 +17,11 @@ public class ContentsRestController {
     private final ContentsRepository ContentsRepository;
     private final ContentsService ContentsService;
 
+    @GetMapping("/health")
+    public String checkHealth() {
+        return "healthy";
+    }
+
     // 게시글 전체 조회
     @GetMapping("/api/contents")
     public List<Contents> getContents() {
